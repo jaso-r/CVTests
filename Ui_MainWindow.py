@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created: Mon Feb 16 15:19:48 2015
+# Created: Tue Feb 24 21:15:49 2015
 #      by: PyQt5 UI code generator 5.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(900, 615)
+        MainWindow.resize(914, 615)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.centralwidget)
@@ -60,7 +60,29 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabShape(QtWidgets.QTabWidget.Rounded)
         self.tabWidget.setObjectName("tabWidget")
         self.edgeDetect = QtWidgets.QWidget()
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.edgeDetect.sizePolicy().hasHeightForWidth())
+        self.edgeDetect.setSizePolicy(sizePolicy)
+        self.edgeDetect.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.edgeDetect.setAutoFillBackground(False)
         self.edgeDetect.setObjectName("edgeDetect")
+        self.gridLayout = QtWidgets.QGridLayout(self.edgeDetect)
+        self.gridLayout.setObjectName("gridLayout")
+        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout.setObjectName("verticalLayout")
+        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(spacerItem1)
+        self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
+        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_6.addItem(spacerItem2)
+        self.edgeDetectApplyButton = QtWidgets.QPushButton(self.edgeDetect)
+        self.edgeDetectApplyButton.setObjectName("edgeDetectApplyButton")
+        self.horizontalLayout_6.addWidget(self.edgeDetectApplyButton)
+        self.verticalLayout.addLayout(self.horizontalLayout_6)
+        self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
         self.tabWidget.addTab(self.edgeDetect, "")
         self.gaborFilter = QtWidgets.QWidget()
         self.gaborFilter.setObjectName("gaborFilter")
@@ -73,7 +95,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setEnabled(True)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 900, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 914, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -96,6 +118,7 @@ class Ui_MainWindow(object):
         self.revertButton.setText(_translate("MainWindow", "Revert"))
         self.zoomInButton.setText(_translate("MainWindow", "+"))
         self.zoomOutButton.setText(_translate("MainWindow", "-"))
+        self.edgeDetectApplyButton.setText(_translate("MainWindow", "Apply"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.edgeDetect), _translate("MainWindow", "Edge Detect"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.gaborFilter), _translate("MainWindow", "Gabor Filter"))
 
