@@ -11,7 +11,7 @@ from Ui_MainWindow import Ui_MainWindow
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QGraphicsScene, QGraphicsPixmapItem
 from PyQt5.QtCore import Qt, QObject, QDir, QEvent
 from PyQt5.QtGui import QImage, QPixmap
-from CVTestsAlgorithms import EdgeDetectAlgorithm, GaborFilterAlgorithm, ImageSequence
+from CVTestsAlgorithms import EdgeDetectAlgorithm, BlobDetectAlgorithm, ImageSequence
 
 
 class CVTestApplication(QObject):
@@ -39,8 +39,9 @@ class CVTestApplication(QObject):
         self.mainWindow.graphicsView.installEventFilter(self)
 
         # hook up the image processing algorithms
-        self.algorithmManager = AlgorithmManager(self.imageManager)
+        self.algorithmManager = AlgorithmManager(self.imageManager, self.mainWindow)
         self.mainWindow.edgeDetectApplyButton.clicked.connect(self.algorithmManager.applyEdgeDetect)
+        self.mainWindow.blobDetectApplyButton.clicked.connect(self.algorithmManager.applyBlobDetect)
 
         qw.show()
         sys.exit(qapp.exec_())
@@ -73,21 +74,26 @@ class AlgorithmManager(object):
     The image data is then passed back to the image manager to be displayed.
     """
 
-    def __init__(self, imageManager):
+    def __init__(self, imageManager, mainWindow):
         self.imageManager = imageManager
         self.edgeDetect = EdgeDetectAlgorithm()
-        self.gabor = GaborFilterAlgorithm()
+        self.blobDetect = BlobDetectAlgorithm()
+        self.mainWindow = mainWindow
 
     def applyEdgeDetect(self):
         imsq = self.imageManager.getImageSequence()
         if imsq is not None:
+            self.edgeDetect.canny = self.mainWindow.cannyButton.isChecked()
+            self.edgeDetect.sigma = self.mainWindow.sigmaSpinBox.value()
             self.edgeDetect.processImages(imsq)
             self.imageManager.setImage(imsq)
 
-    def applyGabor(self):
+    def applyBlobDetect(self):
         imsq = self.imageManager.getImageSequence()
         if imsq is not None:
-            self.gabor.processImages(imsq)
+            self.blobDetect.sigma1 = self.mainWindow.sigma1SpinBox.value()
+            self.blobDetect.sigma2 = self.mainWindow.sigma2SpinBox.value()
+            self.blobDetect.processImages(imsq)
             self.imageManager.setImage(imsq)
 
 
@@ -150,7 +156,7 @@ class ImageManager(object):
         imSq = ImageSequence(self.image.width(), self.image.height())
         ptr = self.image.bits()
         ptr.setsize(self.image.byteCount())
-        imSq.images.append(np.asarray(ptr).reshape(self.image.height(), self.image.width(), 4))
+        imSq.images.append(np.asarray(ptr).reshape(self.image.height(), self.image.width(), 4).astype('int32'))
         return imSq
 
     def setImage(self, imageSequence):
@@ -165,7 +171,7 @@ class ImageManager(object):
 
         # right now we only support displaying a single image
         # so pick the first
-        imageData = imageSequence.images[0].flatten().tobytes()
+        imageData = imageSequence.images[0].astype('uint8').flatten().tobytes()
         tmpimage = QImage(imageData, imageSequence.width, imageSequence.height, QImage.Format_ARGB32)
         if tmpimage is None or tmpimage.isNull():
             QMessageBox.information(self.mainWindow, "CVTest Viewer", "Error viewing modified image")
